@@ -36,6 +36,12 @@ Do not say "all", "none", "only" or "always" when a measured exception exists.
 Distinguish group counts from group rates: many affected rows in a large group do not
 establish higher prevalence. Compare each group's affected count to its own denominator.
 Do not dismiss sparse groups or recommend no action merely because their counts are small.
+Include every compared group in the evidence when the group table fits the output limit.
+Describe nearly equal rates as similar, and describe heterogeneous associations separately
+rather than assigning one strength label to every group. Prioritize without erasing exceptions.
+Counts, rates, and correlations alone cannot determine whether a process is systematic,
+random, intentional, or erroneous. State that such explanations remain untested hypotheses;
+recommend provenance checks instead of selecting a cause. No test of a cause means no verdict.
 Chart claims must match the actual specification: missingness plots show percentages
 by COLUMN, not by demographic/source groups; a frequency bar shows exposure, not rates.
 Use low severity for benign descriptive relationships. High severity requires a concrete

@@ -71,6 +71,8 @@ test.describe('Dataset Investigator core UI', () => {
     await page.getByRole('button', { name: 'state', exact: true }).click()
     await expect(page.getByText('Most frequent values', { exact: true })).toBeVisible()
     await expect(page.getByLabel('state distribution')).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Related findings' })).toBeVisible()
+    await expect(page.getByRole('button', { name: /Possible inconsistent labels in state/ }).first()).toBeVisible()
   })
 
   test('keeps the mobile column selector and details synchronized after search', async ({ page }, testInfo) => {
