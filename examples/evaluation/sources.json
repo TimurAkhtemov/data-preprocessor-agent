@@ -1,0 +1,50 @@
+{
+  "retrieved_at": "2026-09-14T19:46:43.150890+00:00",
+  "datasets": [
+    {
+      "id": "iris",
+      "url": "https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data",
+      "source": "https://archive.ics.uci.edu/dataset/53/iris",
+      "attribution": "Fisher, R. (1936). Iris. UCI Machine Learning Repository. DOI: 10.24432/C56C76.",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "raw_file": "iris.data",
+      "change": "Added descriptive column headers; omitted the trailing blank record. No corrections to original values.",
+      "rows": 150,
+      "columns": 5,
+      "raw_bytes": 4551,
+      "raw_sha256": "6f608b71a7317216319b4d27b4d9bc84e6abd734eda7872b71a458569e2656c0",
+      "prepared_sha256": "24d7757511c6c8d4850aa86a6fad04b9426b319c635af26e6d413d94fe5bd73e"
+    },
+    {
+      "id": "penguins",
+      "url": "https://raw.githubusercontent.com/allisonhorst/palmerpenguins/main/inst/extdata/penguins.csv",
+      "source": "https://allisonhorst.github.io/palmerpenguins/",
+      "attribution": "Palmer Station LTER data collected by Kristen Gorman and colleagues; palmerpenguins package by Allison Horst, Alison Hill and Kristen Gorman (2020). Gorman et al. (2014), PLOS ONE 9(3): e90081. DOI: 10.1371/journal.pone.0090081.",
+      "license": "CC0",
+      "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "raw_file": "penguins.csv",
+      "change": "None. Prepared CSV is an exact copy of the package's simplified dataset.",
+      "rows": 344,
+      "columns": 8,
+      "raw_bytes": 15241,
+      "raw_sha256": "f204db2c753b0937caac3cb35258562c14f073e4bbc76be24b4c51ce22767a93",
+      "prepared_sha256": "f204db2c753b0937caac3cb35258562c14f073e4bbc76be24b4c51ce22767a93"
+    },
+    {
+      "id": "wine_red",
+      "url": "https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality-red.csv",
+      "source": "https://archive.ics.uci.edu/dataset/186/wine+quality",
+      "attribution": "Cortez, P., Cerdeira, A., Almeida, F., Matos, T., & Reis, J. (2009). Wine Quality. UCI Machine Learning Repository. DOI: 10.24432/C56S3T.",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "raw_file": "winequality-red.csv",
+      "change": "Re-serialized semicolon-separated records as comma-separated CSV for the app's standard CSV loader. Headers and cell values unchanged.",
+      "rows": 1599,
+      "columns": 12,
+      "raw_bytes": 84199,
+      "raw_sha256": "4a402cf041b025d4566d954c3b9ba8635a3a8a01e039005d97d6a710278cf05e",
+      "prepared_sha256": "cba09360390561ccc2c228605b42881450f6240476798a64c830e93b5477f766"
+    }
+  ]
+}

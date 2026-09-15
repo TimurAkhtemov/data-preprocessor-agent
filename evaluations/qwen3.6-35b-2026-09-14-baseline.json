@@ -1,0 +1,1179 @@
+{
+  "started_at": "2026-09-14T19:49:33.714843+00:00",
+  "model": "qwen3.6:35b",
+  "model_endpoint": "http://localhost:11434",
+  "method": "Real Ollama calls through FastAPI ASGI routes, real subprocess execution and chart validation in an isolated app lifespan. No mocks.",
+  "limits": {
+    "analytical_actions": 5,
+    "code_timeout_seconds": 10.0
+  },
+  "claim_review": "Structural checks cannot establish semantic correctness; compare each final finding with the independent oracle and computed trace.",
+  "cases": [
+    {
+      "id": "synthetic",
+      "file": "examples/suspicious_customers.csv",
+      "sha256": "69c5a5c1482c114b143a33d9695a611de43e0dd18b22970aa8ee4d4579bc6b98",
+      "elapsed_seconds": 29.74,
+      "checks": {
+        "expected_shape": true,
+        "profile_generated": true,
+        "completed": false,
+        "python_evidence": false,
+        "validated_chart": false,
+        "evidence_backed_finding": false,
+        "bounded_actions": true,
+        "uploaded_bytes_unchanged": true,
+        "snapshot_unchanged": true,
+        "fixture_unchanged": true
+      },
+      "structural_pass": false,
+      "profile": {
+        "row_count": 1212,
+        "column_count": 6,
+        "missing_cells": 229,
+        "duplicate_rows": 12,
+        "sampled": false,
+        "duration_seconds": 0.012,
+        "findings": [
+          {
+            "id": "4836c3604839f9c2",
+            "severity": "medium",
+            "category": "categorical_consistency",
+            "title": "Possible inconsistent labels in state",
+            "description": "8 raw labels collapse to 6 after trimming, lowercasing and collapsing whitespace. Equivalence requires context.",
+            "columns": [
+              "state"
+            ],
+            "evidence": {
+              "raw_unique_count": 8,
+              "normalized_unique_count": 6,
+              "examples": [
+                {
+                  "normalized": "ny",
+                  "raw_values": [
+                    "NY",
+                    "NY ",
+                    "ny"
+                  ],
+                  "variant_count": 3
+                }
+              ]
+            },
+            "source": "profiler"
+          },
+          {
+            "id": "4dc01d6e88dfa882",
+            "severity": "medium",
+            "category": "outliers",
+            "title": "14 extreme statistical observations in age",
+            "description": "Observations fall outside Q1 − 3 × IQR or Q3 + 3 × IQR. Statistical extremes are not necessarily invalid.",
+            "columns": [
+              "age"
+            ],
+            "evidence": {
+              "extreme_outlier_count": 14,
+              "extreme_outlier_ratio": 0.01155115511551155,
+              "lower_boundary": -20.0,
+              "upper_boundary": 106.0
+            },
+            "source": "profiler"
+          },
+          {
+            "id": "60d4de12cb019a7a",
+            "severity": "medium",
+            "category": "extreme_gap",
+            "title": "income maximum is far beyond its 99th percentile",
+            "description": "The maximum is separated from P99 by more than ten distribution-scale units. Inspect the tail for possible encoding or source effects.",
+            "columns": [
+              "income"
+            ],
+            "evidence": {
+              "max": 9500000.0,
+              "p99": 548431.4531999982,
+              "iqr": 68258.9975
+            },
+            "source": "profiler"
+          },
+          {
+            "id": "664c8b116ad3d8bc",
+            "severity": "medium",
+            "category": "missingness",
+            "title": "13.9% of income is missing",
+            "description": "Missing values may reflect collection or source-specific coverage. Check the affected records before choosing a treatment.",
+            "columns": [
+              "income"
+            ],
+            "evidence": {
+              "missing_count": 168,
+              "missing_ratio": 0.13861386138613863,
+              "basis": "Full dataset"
+            },
+            "source": "profiler"
+          },
+          {
+            "id": "8e4dfe6637474b5b",
+            "severity": "medium",
+            "category": "missingness",
+            "title": "5.0% of signup_date is missing",
+            "description": "Missing values may reflect collection or source-specific coverage. Check the affected records before choosing a treatment.",
+            "columns": [
+              "signup_date"
+            ],
+            "evidence": {
+              "missing_count": 61,
+              "missing_ratio": 0.05033003300330033,
+              "basis": "Full dataset"
+            },
+            "source": "profiler"
+          },
+          {
+            "id": "a9f56329e1a692d3",
+            "severity": "medium",
+            "category": "outliers",
+            "title": "44 extreme statistical observations in income",
+            "description": "Observations fall outside Q1 − 3 × IQR or Q3 + 3 × IQR. Statistical extremes are not necessarily invalid.",
+            "columns": [
+              "income"
+            ],
+            "evidence": {
+              "extreme_outlier_count": 44,
+              "extreme_outlier_ratio": 0.0421455938697318,
+              "lower_boundary": -181408.51499999998,
+              "upper_boundary": 296404.4675
+            },
+            "source": "profiler"
+          },
+          {
+            "id": "bae4e2bc4238567d",
+            "severity": "medium",
+            "category": "skew",
+            "title": "income has a highly skewed distribution",
+            "description": "A long distribution tail can make the mean unrepresentative. Compare the median, quantiles and source groups.",
+            "columns": [
+              "income"
+            ],
+            "evidence": {
+              "skewness": 26.939966773633998,
+              "mean": 89792.40586206896,
+              "median": 45648.425
+            },
+            "source": "profiler"
+          },
+          {
+            "id": "bf64a58dda2380a3",
+            "severity": "medium",
+            "category": "skew",
+            "title": "age has a highly skewed distribution",
+            "description": "A long distribution tail can make the mean unrepresentative. Compare the median, quantiles and source groups.",
+            "columns": [
+              "age"
+            ],
+            "evidence": {
+              "skewness": 9.256583884964055,
+              "mean": 53.57178217821782,
+              "median": 43.0
+            },
+            "source": "profiler"
+          },
+          {
+            "id": "51e7d8a4dc880270",
+            "severity": "low",
+            "category": "type_mismatch",
+            "title": "signup_date stores datetime values as text",
+            "description": "More than 90% of sampled non-null values parse as this type. Original values are preserved.",
+            "columns": [
+              "signup_date"
+            ],
+            "evidence": {
+              "stored_dtype": "object",
+              "inferred_type": "datetime"
+            },
+            "source": "profiler"
+          },
+          {
+            "id": "cbc7b49aaea1ba8e",
+            "severity": "low",
+            "category": "duplicates",
+            "title": "12 repeated rows",
+            "description": "Exact duplicates across all columns, excluding the first occurrence. Repeated records may be intentional; inspect their source before removing them.",
+            "columns": [],
+            "evidence": {
+              "duplicate_rows": 12,
+              "duplicate_ratio": 0.009900990099009901,
+              "basis": "Full dataset"
+            },
+            "source": "profiler"
+          },
+          {
+            "id": "fed1d5ac49d18f05",
+            "severity": "low",
+            "category": "identifier",
+            "title": "customer_id appears identifier-like",
+            "description": "Column is nearly unique across rows and may function as an identifier.",
+            "columns": [
+              "customer_id"
+            ],
+            "evidence": {
+              "unique_count": 1200,
+              "unique_ratio": 0.9900990099009901
+            },
+            "source": "profiler"
+          }
+        ]
+      },
+      "oracle": {
+        "extreme_count": 14,
+        "extreme_by_source": {
+          "B": 13,
+          "A": 1
+        },
+        "source_medians": {
+          "A": 42.0,
+          "B": 44.0,
+          "C": 43.0
+        }
+      },
+      "investigation": {
+        "investigation_id": "fa099789-ffed-4a29-a50d-f721859bf370",
+        "question": "Investigate the extreme age observations using the profiler extreme IQR boundaries. Compute their counts by source_system and compare typical ages across sources. Request a useful chart, then finish with measured evidence and a cautious recommendation.",
+        "status": "failed",
+        "max_steps": 5,
+        "steps_remaining": 2,
+        "current_activity": "Investigation stopped",
+        "trace": [
+          {
+            "number": 1,
+            "action": "run_python",
+            "reason": "Compute counts of extreme age observations by source_system and compare typical ages across sources to understand the distribution.",
+            "code": "import pandas as pd\nimport numpy as np\n\n# Define extreme boundaries from profiler\nlower_extreme = -20.0\nupper_extreme = 106.0\n\n# Identify extreme age observations\nextreme_mask = (df['age'] < lower_extreme) | (df['age'] > upper_extreme)\n\n# Count by source_system for all data and extremes\ntotal_counts = df['source_system'].value_counts().sort_index()\nextreme_counts = df[extreme_mask]['source_system'].value_counts().sort_index()\n\n# Calculate typical age (median) by source_system\ntypical_ages = df.groupby('source_system')['age'].median().sort_index()\n\n# Combine results for inspection\nresult = {\n    'total_counts': total_counts.to_dict(),\n    'extreme_counts': extreme_counts.to_dict(),\n    'typical_ages': typical_ages.to_dict()\n}\n\nprint(result)",
+            "result_summary": null,
+            "error": "Code rejected: Import is not allowed in analytical Python."
+          },
+          {
+            "number": 2,
+            "action": "run_python",
+            "reason": "Compute counts of extreme age observations by source_system and compare typical ages across sources without imports.",
+            "code": "# Define extreme boundaries from profiler\nlower_extreme = -20.0\nupper_extreme = 106.0\n\n# Identify extreme age observations\nextreme_mask = (df['age'] < lower_extreme) | (df['age'] > upper_extreme)\n\n# Count by source_system for all data and extremes\ntotal_counts = df['source_system'].value_counts().sort_index()\nextreme_counts = df[extreme_mask]['source_system'].value_counts().sort_index()\n\n# Calculate typical age (median) by source_system\ntypical_ages = df.groupby('source_system')['age'].median().sort_index()\n\n# Combine results for inspection\nresult = {\n    'total_counts': total_counts.to_dict(),\n    'extreme_counts': extreme_counts.to_dict(),\n    'typical_ages': typical_ages.to_dict()\n}\n\nprint(result)",
+            "result_summary": null,
+            "error": "Code rejected: Only explicit analytical methods and safe builtins may be called."
+          },
+          {
+            "number": 3,
+            "action": "run_python",
+            "reason": "Compute extreme age counts by source_system and typical ages using allowed pandas methods.",
+            "code": "# Define extreme boundaries from profiler\nlower_extreme = -20.0\nupper_extreme = 106.0\n\n# Identify extreme age observations\nextreme_mask = (df['age'] < lower_extreme) | (df['age'] > upper_extreme)\n\n# Count by source_system for all data\ntotal_counts = df['source_system'].value_counts().sort_index()\n\n# Count by source_system for extreme ages only\nextreme_counts = df[extreme_mask]['source_system'].value_counts().sort_index()\n\n# Calculate typical age (median) by source_system\ntypical_ages = df.groupby('source_system')['age'].median().sort_index()\n\n# Print results\nprint('Total counts:', total_counts.to_dict())\nprint('Extreme counts:', extreme_counts.to_dict())\nprint('Typical ages:', typical_ages.to_dict())",
+            "result_summary": null,
+            "error": "Code rejected: Assign the final analytical value to result."
+          }
+        ],
+        "charts": [],
+        "final_finding": null,
+        "error": {
+          "code": "EXECUTION_FAILURES",
+          "message": "The local model was unable to complete this investigation reliably. Three Python executions failed consecutively."
+        }
+      }
+    },
+    {
+      "id": "iris",
+      "file": "examples/evaluation/prepared/iris.csv",
+      "sha256": "24d7757511c6c8d4850aa86a6fad04b9426b319c635af26e6d413d94fe5bd73e",
+      "elapsed_seconds": 33.74,
+      "checks": {
+        "expected_shape": true,
+        "profile_generated": true,
+        "completed": true,
+        "python_evidence": true,
+        "validated_chart": true,
+        "evidence_backed_finding": true,
+        "bounded_actions": true,
+        "uploaded_bytes_unchanged": true,
+        "snapshot_unchanged": true,
+        "fixture_unchanged": true
+      },
+      "structural_pass": true,
+      "profile": {
+        "row_count": 150,
+        "column_count": 5,
+        "missing_cells": 0,
+        "duplicate_rows": 3,
+        "sampled": false,
+        "duration_seconds": 0.012,
+        "findings": [
+          {
+            "id": "cbc7b49aaea1ba8e",
+            "severity": "medium",
+            "category": "duplicates",
+            "title": "3 repeated rows",
+            "description": "Exact duplicates across all columns, excluding the first occurrence. Repeated records may be intentional; inspect their source before removing them.",
+            "columns": [],
+            "evidence": {
+              "duplicate_rows": 3,
+              "duplicate_ratio": 0.02,
+              "basis": "Full dataset"
+            },
+            "source": "profiler"
+          }
+        ]
+      },
+      "oracle": {
+        "overall_pearson": 0.9627570970509665,
+        "pearson_by_species": {
+          "Iris-setosa": 0.3063082111580357,
+          "Iris-versicolor": 0.7866680885228168,
+          "Iris-virginica": 0.32210821590031835
+        },
+        "median_by_species": {
+          "petal_length_cm": {
+            "Iris-setosa": 1.5,
+            "Iris-versicolor": 4.35,
+            "Iris-virginica": 5.55
+          },
+          "petal_width_cm": {
+            "Iris-setosa": 0.2,
+            "Iris-versicolor": 1.3,
+            "Iris-virginica": 2.0
+          }
+        }
+      },
+      "investigation": {
+        "investigation_id": "870e17d4-bc82-4a57-995d-6bf2991dee36",
+        "question": "Are petal_length_cm and petal_width_cm associated overall and within each species? Compute Pearson correlations and group medians, request a scatter chart colored by species, and finish with measured evidence. Do not infer causation or call natural group differences errors.",
+        "status": "completed",
+        "max_steps": 5,
+        "steps_remaining": 0,
+        "current_activity": "Investigation complete",
+        "trace": [
+          {
+            "number": 1,
+            "action": "run_python",
+            "reason": "Compute overall and per-species Pearson correlations for petal_length_cm vs petal_width_cm, and group medians.",
+            "code": "import pandas as pd\nimport numpy as np\nfrom scipy import stats\n\n# Overall correlation\ncorr_all = df['petal_length_cm'].corr(df['petal_width_cm'])\n\n# Group medians and correlations per species\ngroups = df.groupby('species')\nmedians = groups[['petal_length_cm', 'petal_width_cm']].median()\ncorrs = {}\nfor name, group in groups:\n    c, _ = stats.pearsonr(group['petal_length_cm'], group['petal_width_cm'])\n    corrs[name] = c\n\nresult = {\n    'overall_correlation': corr_all,\n    'group_medians': medians.to_dict(),\n    'group_correlations': corrs\n}",
+            "result_summary": null,
+            "error": "Code rejected: Import is not allowed in analytical Python."
+          },
+          {
+            "number": 2,
+            "action": "run_python",
+            "reason": "Compute overall Pearson correlation and group medians without imports using pandas built-ins.",
+            "code": "corr_all = df['petal_length_cm'].corr(df['petal_width_cm'])\ngroups = df.groupby('species')\nmedians = groups[['petal_length_cm', 'petal_width_cm']].median()\ncorrs = {}\nfor name, group in groups:\n    c = group['petal_length_cm'].corr(group['petal_width_cm'])\n    corrs[name] = c\nresult = {'overall_correlation': corr_all, 'group_medians': medians.to_dict(), 'group_correlations': corrs}",
+            "result_summary": null,
+            "error": "PermissionError: Restricted runtime event: import (pandas.core.methods.to_dict). Available columns: sepal_length_cm, sepal_width_cm, petal_length_cm, petal_width_cm, species"
+          },
+          {
+            "number": 3,
+            "action": "run_python",
+            "reason": "Compute overall correlation and group medians using only allowed pandas methods without to_dict.",
+            "code": "corr_all = df['petal_length_cm'].corr(df['petal_width_cm'])\ngroups = df.groupby('species')\nmedians = groups[['petal_length_cm', 'petal_width_cm']].median()\ncorrs = {}\nfor name, group in groups:\n    c = group['petal_length_cm'].corr(group['petal_width_cm'])\n    corrs[name] = c\nresult = {'overall_correlation': corr_all, 'group_medians': medians, 'group_correlations': corrs}",
+            "result_summary": "{\"overall_correlation\": 0.9627570970509665, \"group_medians\": \"[DataFrame; return a scalar, dict, list, Series or DataFrame]\", \"group_correlations\": {\"Iris-setosa\": 0.3063082111580357, \"Iris-versicolor\": 0.7866680885228168, \"Iris-virginica\": 0.32210821590031835}}",
+            "error": null
+          },
+          {
+            "number": 4,
+            "action": "run_python",
+            "reason": "Extract group medians as a dictionary for clear reporting.",
+            "code": "groups = df.groupby('species')\nmedians_dict = {}\nfor name, group in groups:\n    medians_dict[name] = {\n        'petal_length_cm': group['petal_length_cm'].median(),\n        'petal_width_cm': group['petal_width_cm'].median()\n    }\nresult = {'group_medians': medians_dict}",
+            "result_summary": "{\"group_medians\": {\"Iris-setosa\": {\"petal_length_cm\": 1.5, \"petal_width_cm\": 0.2}, \"Iris-versicolor\": {\"petal_length_cm\": 4.35, \"petal_width_cm\": 1.3}, \"Iris-virginica\": {\"petal_length_cm\": 5.55, \"petal_width_cm\": 2.0}}}",
+            "error": null
+          },
+          {
+            "number": 5,
+            "action": "request_chart",
+            "reason": "Request a scatter chart colored by species to visually confirm the association patterns.",
+            "code": null,
+            "result_summary": "Chart generated from the dataset. {\"spec\": {\"type\": \"scatter\", \"x\": \"petal_length_cm\", \"y\": \"petal_width_cm\", \"color\": \"species\", \"title\": \"Petal Length vs Width by Species\", \"top_n\": null}, \"sampled\": false, \"sample_size\": 150, \"note\": \"\", \"aggregation\": \"count\"}",
+            "error": null
+          }
+        ],
+        "charts": [
+          {
+            "spec": {
+              "type": "scatter",
+              "x": "petal_length_cm",
+              "y": "petal_width_cm",
+              "color": "species",
+              "title": "Petal Length vs Width by Species",
+              "top_n": null
+            },
+            "series": [
+              {
+                "name": "Iris-setosa",
+                "x": [
+                  1.4,
+                  1.4,
+                  1.3,
+                  1.5,
+                  1.4,
+                  1.7,
+                  1.4,
+                  1.5,
+                  1.4,
+                  1.5,
+                  1.5,
+                  1.6,
+                  1.4,
+                  1.1,
+                  1.2,
+                  1.5,
+                  1.3,
+                  1.4,
+                  1.7,
+                  1.5,
+                  1.7,
+                  1.5,
+                  1.0,
+                  1.7,
+                  1.9,
+                  1.6,
+                  1.6,
+                  1.5,
+                  1.4,
+                  1.6,
+                  1.6,
+                  1.5,
+                  1.5,
+                  1.4,
+                  1.5,
+                  1.2,
+                  1.3,
+                  1.5,
+                  1.3,
+                  1.5,
+                  1.3,
+                  1.3,
+                  1.3,
+                  1.6,
+                  1.9,
+                  1.4,
+                  1.6,
+                  1.4,
+                  1.5,
+                  1.4
+                ],
+                "y": [
+                  0.2,
+                  0.2,
+                  0.2,
+                  0.2,
+                  0.2,
+                  0.4,
+                  0.3,
+                  0.2,
+                  0.2,
+                  0.1,
+                  0.2,
+                  0.2,
+                  0.1,
+                  0.1,
+                  0.2,
+                  0.4,
+                  0.4,
+                  0.3,
+                  0.3,
+                  0.3,
+                  0.2,
+                  0.4,
+                  0.2,
+                  0.5,
+                  0.2,
+                  0.2,
+                  0.4,
+                  0.2,
+                  0.2,
+                  0.2,
+                  0.2,
+                  0.4,
+                  0.1,
+                  0.2,
+                  0.1,
+                  0.2,
+                  0.2,
+                  0.1,
+                  0.2,
+                  0.2,
+                  0.3,
+                  0.3,
+                  0.2,
+                  0.6,
+                  0.4,
+                  0.3,
+                  0.2,
+                  0.2,
+                  0.2,
+                  0.2
+                ]
+              },
+              {
+                "name": "Iris-versicolor",
+                "x": [
+                  4.7,
+                  4.5,
+                  4.9,
+                  4.0,
+                  4.6,
+                  4.5,
+                  4.7,
+                  3.3,
+                  4.6,
+                  3.9,
+                  3.5,
+                  4.2,
+                  4.0,
+                  4.7,
+                  3.6,
+                  4.4,
+                  4.5,
+                  4.1,
+                  4.5,
+                  3.9,
+                  4.8,
+                  4.0,
+                  4.9,
+                  4.7,
+                  4.3,
+                  4.4,
+                  4.8,
+                  5.0,
+                  4.5,
+                  3.5,
+                  3.8,
+                  3.7,
+                  3.9,
+                  5.1,
+                  4.5,
+                  4.5,
+                  4.7,
+                  4.4,
+                  4.1,
+                  4.0,
+                  4.4,
+                  4.6,
+                  4.0,
+                  3.3,
+                  4.2,
+                  4.2,
+                  4.2,
+                  4.3,
+                  3.0,
+                  4.1
+                ],
+                "y": [
+                  1.4,
+                  1.5,
+                  1.5,
+                  1.3,
+                  1.5,
+                  1.3,
+                  1.6,
+                  1.0,
+                  1.3,
+                  1.4,
+                  1.0,
+                  1.5,
+                  1.0,
+                  1.4,
+                  1.3,
+                  1.4,
+                  1.5,
+                  1.0,
+                  1.5,
+                  1.1,
+                  1.8,
+                  1.3,
+                  1.5,
+                  1.2,
+                  1.3,
+                  1.4,
+                  1.4,
+                  1.7,
+                  1.5,
+                  1.0,
+                  1.1,
+                  1.0,
+                  1.2,
+                  1.6,
+                  1.5,
+                  1.6,
+                  1.5,
+                  1.3,
+                  1.3,
+                  1.3,
+                  1.2,
+                  1.4,
+                  1.2,
+                  1.0,
+                  1.3,
+                  1.2,
+                  1.3,
+                  1.3,
+                  1.1,
+                  1.3
+                ]
+              },
+              {
+                "name": "Iris-virginica",
+                "x": [
+                  6.0,
+                  5.1,
+                  5.9,
+                  5.6,
+                  5.8,
+                  6.6,
+                  4.5,
+                  6.3,
+                  5.8,
+                  6.1,
+                  5.1,
+                  5.3,
+                  5.5,
+                  5.0,
+                  5.1,
+                  5.3,
+                  5.5,
+                  6.7,
+                  6.9,
+                  5.0,
+                  5.7,
+                  4.9,
+                  6.7,
+                  4.9,
+                  5.7,
+                  6.0,
+                  4.8,
+                  4.9,
+                  5.6,
+                  5.8,
+                  6.1,
+                  6.4,
+                  5.6,
+                  5.1,
+                  5.6,
+                  6.1,
+                  5.6,
+                  5.5,
+                  4.8,
+                  5.4,
+                  5.6,
+                  5.1,
+                  5.1,
+                  5.9,
+                  5.7,
+                  5.2,
+                  5.0,
+                  5.2,
+                  5.4,
+                  5.1
+                ],
+                "y": [
+                  2.5,
+                  1.9,
+                  2.1,
+                  1.8,
+                  2.2,
+                  2.1,
+                  1.7,
+                  1.8,
+                  1.8,
+                  2.5,
+                  2.0,
+                  1.9,
+                  2.1,
+                  2.0,
+                  2.4,
+                  2.3,
+                  1.8,
+                  2.2,
+                  2.3,
+                  1.5,
+                  2.3,
+                  2.0,
+                  2.0,
+                  1.8,
+                  2.1,
+                  1.8,
+                  1.8,
+                  1.8,
+                  2.1,
+                  1.6,
+                  1.9,
+                  2.0,
+                  2.2,
+                  1.5,
+                  1.4,
+                  2.3,
+                  2.4,
+                  1.8,
+                  1.8,
+                  2.1,
+                  2.4,
+                  2.3,
+                  1.9,
+                  2.3,
+                  2.5,
+                  2.3,
+                  1.9,
+                  2.0,
+                  2.3,
+                  1.8
+                ]
+              }
+            ],
+            "sampled": false,
+            "sample_size": 150,
+            "note": "",
+            "aggregation": "count",
+            "reason": "Request a scatter chart colored by species to visually confirm the association patterns."
+          }
+        ],
+        "final_finding": {
+          "title": "Strong Overall Association, Variable Within-Species Correlation",
+          "severity": "medium",
+          "summary": "Petal length and width are strongly positively associated overall (r=0.96). However, this association is driven largely by species differences. Within-species correlations vary significantly: Iris-versicolor shows a strong positive correlation (r=0.79), while Iris-setosa and Iris-virginica show weak correlations (r=0.31 and r=0.32 respectively). Group medians confirm distinct morphological clusters for each species.",
+          "evidence": [
+            "Overall Pearson correlation between petal_length_cm and petal_width_cm is 0.9628.",
+            "Within-species Pearson correlations: Iris-setosa (0.3063), Iris-versicolor (0.7867), Iris-virginica (0.3221).",
+            "Group medians for petal_length_cm: Iris-setosa (1.5), Iris-versicolor (4.35), Iris-virginica (5.55).",
+            "Group medians for petal_width_cm: Iris-setosa (0.2), Iris-versicolor (1.3), Iris-virginica (2.0)."
+          ],
+          "recommended_action": "Consider analyzing petal dimensions within each species separately if modeling biological variation, as the strong overall correlation masks significant heterogeneity in within-species relationships.",
+          "confidence": 0.95,
+          "related_columns": [
+            "petal_length_cm",
+            "petal_width_cm",
+            "species"
+          ],
+          "source": "agent",
+          "id": "94918fd0-c21e-4cc5-b3f2-3a79e2b66fa1",
+          "investigation_id": "870e17d4-bc82-4a57-995d-6bf2991dee36"
+        },
+        "error": null
+      }
+    },
+    {
+      "id": "penguins",
+      "file": "examples/evaluation/prepared/penguins.csv",
+      "sha256": "f204db2c753b0937caac3cb35258562c14f073e4bbc76be24b4c51ce22767a93",
+      "elapsed_seconds": 22.66,
+      "checks": {
+        "expected_shape": true,
+        "profile_generated": true,
+        "completed": false,
+        "python_evidence": false,
+        "validated_chart": false,
+        "evidence_backed_finding": false,
+        "bounded_actions": true,
+        "uploaded_bytes_unchanged": true,
+        "snapshot_unchanged": true,
+        "fixture_unchanged": true
+      },
+      "structural_pass": false,
+      "profile": {
+        "row_count": 344,
+        "column_count": 8,
+        "missing_cells": 19,
+        "duplicate_rows": 0,
+        "sampled": false,
+        "duration_seconds": 0.012,
+        "findings": [
+          {
+            "id": "57266aefa67354c9",
+            "severity": "low",
+            "category": "missingness",
+            "title": "3.2% of sex is missing",
+            "description": "Missing values may reflect collection or source-specific coverage. Check the affected records before choosing a treatment.",
+            "columns": [
+              "sex"
+            ],
+            "evidence": {
+              "missing_count": 11,
+              "missing_ratio": 0.03197674418604651,
+              "basis": "Full dataset"
+            },
+            "source": "profiler"
+          }
+        ]
+      },
+      "oracle": {
+        "missing_sex": 11,
+        "species": {
+          "Adelie": {
+            "rows": 152,
+            "missing": 6,
+            "rate": 0.039473684210526314
+          },
+          "Chinstrap": {
+            "rows": 68,
+            "missing": 0,
+            "rate": 0.0
+          },
+          "Gentoo": {
+            "rows": 124,
+            "missing": 5,
+            "rate": 0.04032258064516129
+          }
+        },
+        "island": {
+          "Biscoe": {
+            "rows": 168,
+            "missing": 5,
+            "rate": 0.02976190476190476
+          },
+          "Dream": {
+            "rows": 124,
+            "missing": 1,
+            "rate": 0.008064516129032258
+          },
+          "Torgersen": {
+            "rows": 52,
+            "missing": 5,
+            "rate": 0.09615384615384616
+          }
+        }
+      },
+      "investigation": {
+        "investigation_id": "2709b39e-cff4-4266-a362-b6e061515b9d",
+        "question": "Are missing sex values concentrated in a species or island? Compute missing counts and rates using each group's row count as denominator, compare groups, request a missingness chart, and finish with measured evidence. Do not invent a cause for missing data.",
+        "status": "failed",
+        "max_steps": 5,
+        "steps_remaining": 2,
+        "current_activity": "Investigation stopped",
+        "trace": [
+          {
+            "number": 1,
+            "action": "run_python",
+            "reason": "Compute missing sex counts and rates grouped by species and island to identify concentration.",
+            "code": "import pandas as pd\nimport numpy as np\n\n# Group by species\ngrouped_species = df.groupby('species').agg(\n    total_count=('sex', 'size'),\n    missing_count=('sex', lambda x: x.isnull().sum())\n).reset_index()\ngrouped_species['missing_rate'] = grouped_species['missing_count'] / grouped_species['total_count']\n\n# Group by island\ngrouped_island = df.groupby('island').agg(\n    total_count=('sex', 'size'),\n    missing_count=('sex', lambda x: x.isnull().sum())\n).reset_index()\ngrouped_island['missing_rate'] = grouped_island['missing_count'] / grouped_island['total_count']\n\nresult_species = grouped_species\nresult_island = grouped_island",
+            "result_summary": null,
+            "error": "Code rejected: Assign the final analytical value to result."
+          },
+          {
+            "number": 2,
+            "action": "run_python",
+            "reason": "Compute missing sex counts and rates grouped by species and island to identify concentration.",
+            "code": "import pandas as pd\nimport numpy as np\n\n# Group by species\ngrouped_species = df.groupby('species').agg(\n    total_count=('sex', 'size'),\n    missing_count=('sex', lambda x: x.isnull().sum())\n).reset_index()\ngrouped_species['missing_rate'] = grouped_species['missing_count'] / grouped_species['total_count']\n\n# Group by island\ngrouped_island = df.groupby('island').agg(\n    total_count=('sex', 'size'),\n    missing_count=('sex', lambda x: x.isnull().sum())\n).reset_index()\ngrouped_island['missing_rate'] = grouped_island['missing_count'] / grouped_island['total_count']\n\nresult_species = grouped_species\nresult_island = grouped_island",
+            "result_summary": null,
+            "error": "Code rejected: Assign the final analytical value to result."
+          },
+          {
+            "number": 3,
+            "action": "run_python",
+            "reason": "Compute missing sex counts and rates grouped by species and island to identify concentration.",
+            "code": "import pandas as pd\nimport numpy as np\n\ngrouped_species = df.groupby('species').agg(\n    total_count=('sex', 'size'),\n    missing_count=('sex', lambda x: x.isnull().sum())\n).reset_index()\ngrouped_species['missing_rate'] = grouped_species['missing_count'] / grouped_species['total_count']\n\ngrouped_island = df.groupby('island').agg(\n    total_count=('sex', 'size'),\n    missing_count=('sex', lambda x: x.isnull().sum())\n).reset_index()\ngrouped_island['missing_rate'] = grouped_island['missing_count'] / grouped_island['total_count']\n\nresult = {'species': grouped_species, 'island': grouped_island}",
+            "result_summary": null,
+            "error": "Code rejected: Import is not allowed in analytical Python."
+          }
+        ],
+        "charts": [],
+        "final_finding": null,
+        "error": {
+          "code": "EXECUTION_FAILURES",
+          "message": "The local model was unable to complete this investigation reliably. Three Python executions failed consecutively."
+        }
+      }
+    },
+    {
+      "id": "wine_red",
+      "file": "examples/evaluation/prepared/wine_red.csv",
+      "sha256": "cba09360390561ccc2c228605b42881450f6240476798a64c830e93b5477f766",
+      "elapsed_seconds": 31.21,
+      "checks": {
+        "expected_shape": true,
+        "profile_generated": true,
+        "completed": false,
+        "python_evidence": false,
+        "validated_chart": false,
+        "evidence_backed_finding": false,
+        "bounded_actions": true,
+        "uploaded_bytes_unchanged": true,
+        "snapshot_unchanged": true,
+        "fixture_unchanged": true
+      },
+      "structural_pass": false,
+      "profile": {
+        "row_count": 1599,
+        "column_count": 12,
+        "missing_cells": 0,
+        "duplicate_rows": 240,
+        "sampled": false,
+        "duration_seconds": 0.011,
+        "findings": [
+          {
+            "id": "cbc7b49aaea1ba8e",
+            "severity": "high",
+            "category": "duplicates",
+            "title": "240 repeated rows",
+            "description": "Exact duplicates across all columns, excluding the first occurrence. Repeated records may be intentional; inspect their source before removing them.",
+            "columns": [],
+            "evidence": {
+              "duplicate_rows": 240,
+              "duplicate_ratio": 0.150093808630394,
+              "basis": "Full dataset"
+            },
+            "source": "profiler"
+          },
+          {
+            "id": "750f2e309bf4d0c9",
+            "severity": "medium",
+            "category": "outliers",
+            "title": "16 extreme statistical observations in sulphates",
+            "description": "Observations fall outside Q1 − 3 × IQR or Q3 + 3 × IQR. Statistical extremes are not necessarily invalid.",
+            "columns": [
+              "sulphates"
+            ],
+            "evidence": {
+              "extreme_outlier_count": 16,
+              "extreme_outlier_ratio": 0.010006253908692933,
+              "lower_boundary": 0.010000000000000231,
+              "upper_boundary": 1.2699999999999998
+            },
+            "source": "profiler"
+          },
+          {
+            "id": "cf881beb8dedc37b",
+            "severity": "medium",
+            "category": "outliers",
+            "title": "88 extreme statistical observations in residual sugar",
+            "description": "Observations fall outside Q1 − 3 × IQR or Q3 + 3 × IQR. Statistical extremes are not necessarily invalid.",
+            "columns": [
+              "residual sugar"
+            ],
+            "evidence": {
+              "extreme_outlier_count": 88,
+              "extreme_outlier_ratio": 0.05503439649781113,
+              "lower_boundary": -0.20000000000000062,
+              "upper_boundary": 4.700000000000001
+            },
+            "source": "profiler"
+          },
+          {
+            "id": "d1c23fc04d3f1e22",
+            "severity": "medium",
+            "category": "skew",
+            "title": "chlorides has a highly skewed distribution",
+            "description": "A long distribution tail can make the mean unrepresentative. Compare the median, quantiles and source groups.",
+            "columns": [
+              "chlorides"
+            ],
+            "evidence": {
+              "skewness": 5.680346571971724,
+              "mean": 0.08746654158849279,
+              "median": 0.079
+            },
+            "source": "profiler"
+          },
+          {
+            "id": "e1fe8bb56442c275",
+            "severity": "medium",
+            "category": "outliers",
+            "title": "67 extreme statistical observations in chlorides",
+            "description": "Observations fall outside Q1 − 3 × IQR or Q3 + 3 × IQR. Statistical extremes are not necessarily invalid.",
+            "columns": [
+              "chlorides"
+            ],
+            "evidence": {
+              "extreme_outlier_count": 67,
+              "extreme_outlier_ratio": 0.041901188242651655,
+              "lower_boundary": 0.010000000000000037,
+              "upper_boundary": 0.14999999999999997
+            },
+            "source": "profiler"
+          },
+          {
+            "id": "3ed8f880e0fbeaef",
+            "severity": "low",
+            "category": "outliers",
+            "title": "2 extreme statistical observations in pH",
+            "description": "Observations fall outside Q1 − 3 × IQR or Q3 + 3 × IQR. Statistical extremes are not necessarily invalid.",
+            "columns": [
+              "pH"
+            ],
+            "evidence": {
+              "extreme_outlier_count": 2,
+              "extreme_outlier_ratio": 0.0012507817385866166,
+              "lower_boundary": 2.64,
+              "upper_boundary": 3.9699999999999998
+            },
+            "source": "profiler"
+          },
+          {
+            "id": "54b5e94bf0b574fb",
+            "severity": "low",
+            "category": "skew",
+            "title": "sulphates has a highly skewed distribution",
+            "description": "A long distribution tail can make the mean unrepresentative. Compare the median, quantiles and source groups.",
+            "columns": [
+              "sulphates"
+            ],
+            "evidence": {
+              "skewness": 2.4286723536602945,
+              "mean": 0.6581488430268917,
+              "median": 0.62
+            },
+            "source": "profiler"
+          },
+          {
+            "id": "66fd981ad14c2e08",
+            "severity": "low",
+            "category": "skew",
+            "title": "residual sugar has a highly skewed distribution",
+            "description": "A long distribution tail can make the mean unrepresentative. Compare the median, quantiles and source groups.",
+            "columns": [
+              "residual sugar"
+            ],
+            "evidence": {
+              "skewness": 4.54065542590319,
+              "mean": 2.53880550343965,
+              "median": 2.2
+            },
+            "source": "profiler"
+          },
+          {
+            "id": "79dba13150136cec",
+            "severity": "low",
+            "category": "outliers",
+            "title": "4 extreme statistical observations in free sulfur dioxide",
+            "description": "Observations fall outside Q1 − 3 × IQR or Q3 + 3 × IQR. Statistical extremes are not necessarily invalid.",
+            "columns": [
+              "free sulfur dioxide"
+            ],
+            "evidence": {
+              "extreme_outlier_count": 4,
+              "extreme_outlier_ratio": 0.0025015634771732333,
+              "lower_boundary": -35.0,
+              "upper_boundary": 63.0
+            },
+            "source": "profiler"
+          },
+          {
+            "id": "a8c6a1d481361629",
+            "severity": "low",
+            "category": "outliers",
+            "title": "5 extreme statistical observations in fixed acidity",
+            "description": "Observations fall outside Q1 − 3 × IQR or Q3 + 3 × IQR. Statistical extremes are not necessarily invalid.",
+            "columns": [
+              "fixed acidity"
+            ],
+            "evidence": {
+              "extreme_outlier_count": 5,
+              "extreme_outlier_ratio": 0.0031269543464665416,
+              "lower_boundary": 0.8000000000000007,
+              "upper_boundary": 15.499999999999998
+            },
+            "source": "profiler"
+          },
+          {
+            "id": "e2cde3cca583460a",
+            "severity": "low",
+            "category": "outliers",
+            "title": "1 extreme statistical observations in volatile acidity",
+            "description": "Observations fall outside Q1 − 3 × IQR or Q3 + 3 × IQR. Statistical extremes are not necessarily invalid.",
+            "columns": [
+              "volatile acidity"
+            ],
+            "evidence": {
+              "extreme_outlier_count": 1,
+              "extreme_outlier_ratio": 0.0006253908692933083,
+              "lower_boundary": -0.36,
+              "upper_boundary": 1.3900000000000001
+            },
+            "source": "profiler"
+          },
+          {
+            "id": "e403bf2e92137995",
+            "severity": "low",
+            "category": "outliers",
+            "title": "2 extreme statistical observations in total sulfur dioxide",
+            "description": "Observations fall outside Q1 − 3 × IQR or Q3 + 3 × IQR. Statistical extremes are not necessarily invalid.",
+            "columns": [
+              "total sulfur dioxide"
+            ],
+            "evidence": {
+              "extreme_outlier_count": 2,
+              "extreme_outlier_ratio": 0.0012507817385866166,
+              "lower_boundary": -98.0,
+              "upper_boundary": 182.0
+            },
+            "source": "profiler"
+          }
+        ]
+      },
+      "oracle": {
+        "duplicate_rows": 240,
+        "by_quality": {
+          "3": {
+            "rows": 10,
+            "duplicates": 0,
+            "rate": 0.0
+          },
+          "4": {
+            "rows": 53,
+            "duplicates": 0,
+            "rate": 0.0
+          },
+          "5": {
+            "rows": 681,
+            "duplicates": 104,
+            "rate": 0.1527165932452276
+          },
+          "6": {
+            "rows": 638,
+            "duplicates": 103,
+            "rate": 0.1614420062695925
+          },
+          "7": {
+            "rows": 199,
+            "duplicates": 32,
+            "rate": 0.16080402010050251
+          },
+          "8": {
+            "rows": 18,
+            "duplicates": 1,
+            "rate": 0.05555555555555555
+          }
+        }
+      },
+      "investigation": {
+        "investigation_id": "71d4ee1b-a5eb-4289-86ce-01d9bfd2683a",
+        "question": "Are exact repeated wine rows concentrated in particular quality scores? Count duplicates excluding their first occurrence and compare counts and within-group duplicate rates by quality. Request a bar chart of quality frequencies for context. Finish with measured evidence; distinguish repeated measurements from a proven ingestion error.",
+        "status": "failed",
+        "max_steps": 5,
+        "steps_remaining": 2,
+        "current_activity": "Investigation stopped",
+        "trace": [
+          {
+            "number": 1,
+            "action": "run_python",
+            "reason": "Identify duplicate rows excluding the first occurrence and group by quality score to count duplicates and calculate within-group duplicate rates.",
+            "code": "import pandas as pd\nimport numpy as np\n\n# Identify duplicates, keeping only subsequent occurrences\nduplicates = df[df.duplicated(keep='first')]\n\n# Count total duplicates\ntotal_duplicates = len(duplicates)\n\n# Group duplicates by quality and count\ndup_by_quality = duplicates.groupby('quality').size()\n\n# Get total counts per quality for context\ntotal_by_quality = df.groupby('quality').size()\n\n# Calculate duplicate rate within each quality group (duplicates / total rows in that group)\n# Note: The denominator is the total count of that quality score in the full dataset.\ndup_rate_by_quality = dup_by_quality / total_by_quality\n\n# Prepare result for inspection\nresult = pd.DataFrame({\n    'total_count': total_by_quality,\n    'duplicate_count': dup_by_quality.reindex(total_by_quality.index, fill_value=0),\n    'duplicate_rate': dup_rate_by_quality.reindex(total_by_quality.index, fill_value=0.0)\n}).sort_index()\n\n# Also get the overall distribution of quality for the chart context\nquality_dist = df['quality'].value_counts().sort_index()\n\nprint(\"Duplicate Counts by Quality:\")\nprint(dup_by_quality)\nprint(\"\\nDuplicate Rates by Quality:\")\nprint(dup_rate_by_quality)\nprint(\"\\nOverall Quality Distribution:\")\nprint(quality_dist)",
+            "result_summary": null,
+            "error": "Code rejected: Import is not allowed in analytical Python."
+          },
+          {
+            "number": 2,
+            "action": "run_python",
+            "reason": "Identify duplicate rows excluding the first occurrence and group by quality score to count duplicates and calculate within-group duplicate rates without imports.",
+            "code": "# Identify duplicates, keeping only subsequent occurrences\nduplicates = df[df.duplicated(keep='first')]\n\n# Count total duplicates\ntotal_duplicates = len(duplicates)\n\n# Group duplicates by quality and count\ndup_by_quality = duplicates.groupby('quality').size()\n\n# Get total counts per quality for context\ntotal_by_quality = df.groupby('quality').size()\n\n# Calculate duplicate rate within each quality group (duplicates / total rows in that group)\n# Note: The denominator is the total count of that quality score in the full dataset.\ndup_rate_by_quality = dup_by_quality / total_by_quality\n\n# Prepare result for inspection\nresult = pd.DataFrame({\n    'total_count': total_by_quality,\n    'duplicate_count': dup_by_quality.reindex(total_by_quality.index, fill_value=0),\n    'duplicate_rate': dup_rate_by_quality.reindex(total_by_quality.index, fill_value=0.0)\n}).sort_index()\n\n# Also get the overall distribution of quality for the chart context\nquality_dist = df['quality'].value_counts().sort_index()\n\nprint(\"Duplicate Counts by Quality:\")\nprint(dup_by_quality)\nprint(\"\\nDuplicate Rates by Quality:\")\nprint(dup_rate_by_quality)\nprint(\"\\nOverall Quality Distribution:\")\nprint(quality_dist)",
+            "result_summary": null,
+            "error": "Code rejected: Only explicit analytical methods and safe builtins may be called."
+          },
+          {
+            "number": 3,
+            "action": "run_python",
+            "reason": "Count duplicates by quality score using value_counts on duplicated rows and total counts per quality to calculate rates.",
+            "code": "# Get total count of each quality score\ntotal_by_quality = df['quality'].value_counts().sort_index()\n\n# Identify duplicate rows (excluding first occurrence)\nduplicates = df[df.duplicated(keep='first')]\n\n# Count duplicates for each quality score\ndup_by_quality = duplicates['quality'].value_counts().sort_index()\n\n# Calculate duplicate rate per quality: duplicates / total\n# Align indices to ensure all quality scores are present\ndup_rate_by_quality = dup_by_quality / total_by_quality\n\n# Fill any missing quality scores with 0 duplicates and 0.0 rate\ndup_rate_by_quality = dup_rate_by_quality.reindex(total_by_quality.index, fill_value=0.0)\n\nresult = pd.DataFrame({\n    'total_count': total_by_quality,\n    'duplicate_count': dup_by_quality.reindex(total_by_quality.index, fill_value=0),\n    'duplicate_rate': dup_rate_by_quality\n}).sort_index()\n\nprint(result)",
+            "result_summary": null,
+            "error": "Code rejected: Only explicit analytical methods and safe builtins may be called."
+          }
+        ],
+        "charts": [],
+        "final_finding": null,
+        "error": {
+          "code": "EXECUTION_FAILURES",
+          "message": "The local model was unable to complete this investigation reliably. Three Python executions failed consecutively."
+        }
+      }
+    }
+  ],
+  "completed_at": "2026-09-14T19:51:31.154204+00:00",
+  "structural_pass": false
+}
