@@ -1,0 +1,3 @@
+# Preserve fixture bytes exactly, including meaningful whitespace and CRLF.
+examples/** -text -whitespace
+tests/fixtures/** -text -whitespace
