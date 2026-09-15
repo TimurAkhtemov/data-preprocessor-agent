@@ -4,10 +4,10 @@ Source of truth: `PRD — Local Dataset Investigator.md` (95 sections, inspected
 
 ## Current status
 
-- Core application implemented and exercised live through Qwen, Python, chart and final finding.
+- Functional PRD MVP complete and running at `http://127.0.0.1:5173`, using installed `qwen3.6:35b`. Demo plus a successful browser-submitted investigation remain in the local session.
 - Profiler/worker/API/agent tests pass; frontend builds and lints; eight real browser regression tests pass.
-- Post-MVP evaluation underway. Baseline exposed protocol failures; revision 1 completed all four workflows but semantic review found unsupported conclusions. Both runs are preserved. A new run is testing native Qwen reasoning and stricter evidence guidance on the same questions.
-- Remaining: semantic review of the updated four-case run, final full checks, dev-script verification, and final README/progress reconciliation.
+- Post-MVP evaluation complete: final four-case run passes all structural/numeric/chart checks with no rejected actions or source mutation. Independent semantic review: one pass, three qualified passes, no false numerical claims. Earlier failures and remaining interpretation/method limitations are preserved below.
+- Implementation, full checks, launcher lifecycle, browser regressions, final visual review, real browser-submitted investigation and evaluation review are complete. No required MVP implementation work remains. Known model interpretation and execution-isolation limits are documented; this is a local MVP, not a hardened public service.
 - Checkpoints below are chronological records; their pending-work statements describe that time, not current status.
 
 ## Implementation order
@@ -108,3 +108,29 @@ Source of truth: `PRD — Local Dataset Investigator.md` (95 sections, inspected
 - Re-ran all eight browser tests on the final app: **8 passed in 7.5 seconds**. Added an assertion that the selected column's related findings appear. Both real CSV/Parquet uploads, errors preserving the active dataset, charts, filters, Sheet/Escape, theme changes and mobile search pass.
 - Native-reasoning run `evaluations/qwen3.6-35b-2026-09-15.json`: **4/4 structural/numeric/chart passes**, four successful Python actions, five chart actions (one rejected then corrected), all original/snapshot/fixture hashes unchanged. Durations: synthetic 138.91s, Iris 66.93s, Penguins 55.79s, Wine 77.96s. Independent Sol review plus main review: synthetic pass; Iris qualified (overgeneralizes correlation strengths); Penguins qualified (overstates Gentoo vs almost-equal Adelie rate); Wine semantic fail (unsupported systematic-vs-random explanation and omitted quality-8 comparison). Recorded reviews alongside unchanged model outputs in the artifact.
 - Added six lines of general guidance to preserve every small-group comparison, describe near-equal rates and heterogeneous associations accurately, and keep process/cause explanations as untested hypotheses. The final repeat uses exactly the same questions, fixtures and limits. No additional agent phases, verification agents, retries or dataset-specific answers were added to the application.
+
+## Final evaluation — September 15
+
+Artifact: `evaluations/qwen3.6-35b-2026-09-15-final.json`, backend source matches commit `b8044e1` and the saved code digest. Real Ollama `qwen3.6:35b`, native reasoning default, unchanged questions/fixtures, no mocks. Four Python actions and four validated charts; **two analytical actions per case**, no rejections, no repairs, every original/snapshot/fixture hash unchanged. All 4 structural/numeric/chart checks pass. Total case time 418.06 seconds; this is a single run, not a reliability estimate.
+
+| Dataset | Rows × columns | Time | Observed behavior and semantic review |
+| --- | --- | --- | --- |
+| Synthetic customers | 1,212 × 6 | 108.80s | **Qualified.** Correct A=1/B=13/C=0, medians 42/44/43 and useful box. It checked only age >106, omitting the lower <-20 boundary; there are no low extremes in this fixture, so matching numbers does not prove full method coverage. “Significantly” lacks a test; follow-up should include A's one exception. |
+| Iris | 150 × 5 | 144.05s | **Pass.** Correct overall r=.9628 and within-species r=.3063/.7867/.3221, all medians and species-colored scatter. No causal claim or false error diagnosis. Correlation-strength adjectives are subjective; model confidence is uncalibrated. |
+| Palmer penguins | 344 × 8 | 78.07s | **Qualified.** All missing-sex counts and denominator-based rates correct. Torgersen is 9.6% versus Biscoe 3.0%/Dream 0.8%; Gentoo 4.03% is essentially tied with Adelie 3.95%, so singling out Gentoo is misleading. Chart is column-level missingness, not group evidence. |
+| Red wine quality | 1,599 × 12 | 87.14s | **Qualified; earlier causal failure fixed.** Correct duplicate counts/rates for all scores, including 8. Correctly describes similar rates in common scores 5–7 and makes no ingestion-cause claim. Broad no-concentration wording should be limited to well-represented groups; sparse groups need caution, and intentional repeated measurements should be named explicitly as an alternative. |
+
+- Sol independently reviewed the question, code, computed output, chart and final text; main reviewed the same evidence. Semantic outcome: **one pass, three qualified passes, zero fails**. No false numerical final claim remains, but prose and method coverage still require review. Stored the qualifications in the artifact without rewriting the model outputs.
+- Stopped prompt tuning after this general evidence correction; further optimizing these four fixtures would overstate broader reliability and exceed the requested small evaluation scope.
+- Final post-change `make check`: **119 passed in 12.10s**, clean Ruff/ESLint, TypeScript/Vite build passed. Browser suite: **8 passed in 7.5s**. No application code changed after these checks.
+
+## Final live browser acceptance and handoff
+
+- The last browser check was initially blocked by automatic approval review because account usage was exhausted. After the user resumed, the same authorized check ran successfully. The prior delegated visual check had produced no new artifacts; main completed final visual QA directly in an isolated Chrome profile.
+- Submitted a real free-form question through the visible text area and **Run investigation** button, observed live progress, then checked the final finding, source-colored box, expanded Python/result trace and Agent finding filter. Two analytical actions, no rejected actions, correct medians A=42/B=44/C=43 and counts above 106 A=1/B=13/C=0. No cause is asserted. Saved the complete browser-run evidence in `evaluations/browser-qwen3.6-35b-2026-09-15.json`.
+- Inspected fresh laptop light/dark and mobile screenshots. Mobile has no horizontal overflow; column selection, actual rendered categorical chart and related findings work. Screenshots are in `/private/tmp/di-final-qa/` (temporary visual evidence); durable JSON results are committed in `evaluations/`.
+- Final visual review found two presentation issues: missing favicon (confirmed HTTP 404), and hidden box-plot outlier markers. Fixed in `d122cf2`: local SVG favicon, visible outlier markers and a short explanation of box 1.5×IQR versus profiler 3×IQR thresholds. Added the marker assertion to the numeric-column regression. No backend/agent behavior changed.
+- After those presentation changes, targeted live browser checks passed for both column and agent boxes (14 and 16 markers respectively; grouping changes quartiles), SVG returned HTTP 200, and there were **zero browser console/page errors**. Frontend lint, TypeScript and production build passed again. The eight-test suite ran before these final presentation fixes; their new marker assertion was also exercised directly against the running app without replacing the completed investigation.
+- Final production bundle: application ~345 KB (~110 KB gzip), Plotly lazy chunk ~1.43 MB (~474 KB gzip). No cloud runtime services, database, cleaning/export actions, or additional agent phases were added.
+- Git now records the original PRD, application, evaluation suite, evidence-guidance correction, presentation fixes and final results/documentation as separate reviewable checkpoints. Dependency caches, local configuration and generated build/browser output remain ignored. The original PRD is unchanged.
+- Startup remains `OLLAMA_MODEL=qwen3.6:35b make dev` on this machine, or set an installed tag in `.env` and use `make dev`. Profiling also works without Ollama. Detailed setup, limits and verification commands are in `README.md`.

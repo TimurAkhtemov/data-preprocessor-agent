@@ -165,6 +165,10 @@ The runner creates its own temporary FastAPI session, uses actual upload/profile
 
 Automated structural/numeric coverage checks are supplemented by a separate semantic review of claim-to-evidence correspondence. A passing small run demonstrates those cases; it is not a reliability benchmark. The failed baseline is preserved alongside the subsequent run in `evaluations/`. Observed failures, fixes and final case-by-case behavior are documented in [progress.md](progress.md).
 
+Verified on September 15, 2026: **119 automated tests**, **eight browser tests**, clean lint and a successful production build. The [final Qwen run](evaluations/qwen3.6-35b-2026-09-15-final.json) completed all four workflows with the required computed values and charts, two analytical actions per case, no rejected actions, and unchanged source/snapshot hashes. Model prose still needs review: correct calculations do not guarantee precise interpretation. The saved reviews retain those qualifications and earlier failures.
+
+A [separate browser-submitted Qwen investigation](evaluations/browser-qwen3.6-35b-2026-09-15.json) verifies the actual form, live progress, final finding, chart, trace and Agent filter. Final presentation fixes were checked with live browser assertions and a fresh frontend lint/build; see `progress.md` for the precise verification sequence.
+
 ## Repository
 
 - `backend/dataset_investigator/data/`: ingestion, profiler, heuristics, bounded serialization
