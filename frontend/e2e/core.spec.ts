@@ -67,6 +67,7 @@ test.describe('Dataset Investigator core UI', () => {
     await expect(page.getByLabel('age distribution')).toBeVisible()
     await page.getByRole('button', { name: 'Box plot', exact: true }).click()
     await expect(page.getByLabel('age distribution')).toBeVisible()
+    await expect(page.locator('.column-chart .boxlayer .point').first()).toBeVisible()
 
     await page.getByRole('button', { name: 'state', exact: true }).click()
     await expect(page.getByText('Most frequent values', { exact: true })).toBeVisible()

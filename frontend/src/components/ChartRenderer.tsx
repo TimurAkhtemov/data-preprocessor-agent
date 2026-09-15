@@ -36,7 +36,7 @@ export function ChartRenderer({
       y: s.y.map(escape),
     }
     if (spec.type === 'box')
-      return { ...base, y: undefined, type: 'box', boxpoints: false, orientation: 'h' } as Data
+      return { ...base, y: undefined, type: 'box', boxpoints: 'outliers', orientation: 'h' } as Data
     if (spec.type === 'scatter')
       return {
         ...base,
@@ -135,6 +135,12 @@ export function ChartRenderer({
           style={{ width: '100%', height: layout.height }}
         />
       </Suspense>
+      {spec.type === 'box' && (
+        <p className="chart-note">
+          Box plots mark outliers beyond 1.5 × IQR within each group. Profiler extreme flags use 3 ×
+          IQR across the full column.
+        </p>
+      )}
       {chart.note && <p className="chart-note">{chart.note}</p>}
     </div>
   )
