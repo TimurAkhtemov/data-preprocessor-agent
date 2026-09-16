@@ -374,6 +374,21 @@ def validate_code(code: str) -> ast.Module:
         problems.append("Assign the final analytical value to result, exactly that variable name.")
     if problems:
         raise CodeRejected(" ".join(problems))
+    attribute_bases = {
+        id(node.value)
+        for node in nodes
+        if isinstance(node, ast.Attribute) and isinstance(node.value, ast.Name)
+    }
+    for node in nodes:
+        if (
+            isinstance(node, ast.Name)
+            and isinstance(node.ctx, ast.Load)
+            and node.id in MODULE_MEMBERS
+            and id(node) not in attribute_bases
+        ):
+            raise CodeRejected(
+                f"Use {node.id} directly with attribute access; modules cannot be aliased or passed as values."
+            )
     for node in ast.walk(tree):
         if isinstance(node, BLOCKED_NODES):
             raise CodeRejected(f"{type(node).__name__} is not allowed in analytical Python.")

@@ -144,12 +144,14 @@ def detect_findings(profile: DatasetProfile) -> list[ProfilerFinding]:
                 {"skewness": n.skewness, "mean": n.mean, "median": n.median},
                 profile.sampled,
             )
-        if (
-            n.max is not None
-            and n.p99 is not None
-            and n.iqr is not None
-            and (n.max - n.p99) > 10 * max(n.iqr, abs(n.p99) * 0.1, 1e-12)
-        ):
+        scale = (
+            max(n.iqr, abs(n.p99) * 0.1)
+            if n.iqr is not None and n.p99 is not None
+            else 0
+        )
+        # A zero scale means P99 and the IQR are both zero (sparse flags/counts); the
+        # outlier heuristic already covers those, so a gap is not meaningful.
+        if n.max is not None and n.p99 is not None and scale > 0 and (n.max - n.p99) > 10 * scale:
             add(
                 "extreme_gap",
                 "medium",

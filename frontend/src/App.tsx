@@ -125,10 +125,38 @@ export default function App() {
           setBackendOnline(true)
         }
       } catch (e) {
-        if (alive) {
-          setBackendOnline(false)
-          setError(asError(e))
+        if (!alive) return
+        const failure = asError(e)
+        if (failure.code === 'INVESTIGATION_NOT_FOUND' || failure.code === 'NO_DATASET') {
+          // The backend answered but no longer knows this investigation: it restarted
+          // and its in-memory session is gone. Stop polling and resync the dataset.
+          setBackendOnline(true)
+          setError(
+            new ApiError(
+              'INVESTIGATION_LOST',
+              'The local backend restarted, so this investigation ended without a result. Load the dataset again to continue.',
+            ),
+          )
+          setActive(null)
+          setDataset((d) =>
+            d
+              ? {
+                  ...d,
+                  investigations: d.investigations.filter(
+                    (i) => i.investigation_id !== activeId,
+                  ),
+                  active_investigation_id: null,
+                }
+              : d,
+          )
+          api
+            .current()
+            .then(setDataset)
+            .catch(() => {})
+          return
         }
+        setBackendOnline(false)
+        setError(failure)
       }
       if (alive) timer = setTimeout(poll, 1000)
     }

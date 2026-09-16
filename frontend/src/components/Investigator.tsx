@@ -14,6 +14,9 @@ import type { Finding, Investigation, OllamaStatus } from '@/types/api'
 import { Button } from './ui/button'
 import { ChartRenderer } from './ChartRenderer'
 
+// Matches the backend InvestigationRequest.question minimum length.
+const MIN_QUESTION_LENGTH = 3
+
 export function InvestigationTrace({ investigation }: { investigation: Investigation }) {
   return (
     <details className="trace">
@@ -127,8 +130,9 @@ export function Investigator({
   const available = status?.connected && status.model_available
   const shown =
     active || investigations.find((i) => i.investigation_id === selectedId) || investigations.at(-1)
+  const ready = question.trim().length >= MIN_QUESTION_LENGTH
   const submit = async (q: string, f?: Finding) => {
-    if (!q.trim() || submitting || active || !available) return
+    if (q.trim().length < MIN_QUESTION_LENGTH || submitting || active || !available) return
     setSubmitting(true)
     setSelectedId(null)
     try {
@@ -195,7 +199,7 @@ export function Investigator({
         />
         <div className="input-footer">
           <span>Analyses run locally. Your source stays unchanged.</span>
-          <Button type="submit" disabled={!available || !!active || submitting || !question.trim()}>
+          <Button type="submit" disabled={!available || !!active || submitting || !ready}>
             {active || submitting ? <LoaderCircle className="spin" /> : <Play size={14} />}
             {active ? 'Investigation in progress' : 'Run investigation'}
           </Button>

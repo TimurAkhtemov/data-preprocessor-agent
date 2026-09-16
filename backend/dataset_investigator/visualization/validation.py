@@ -4,6 +4,8 @@ import pandas as pd
 from ..models import DatasetProfile
 from .schemas import ChartSpec
 
+MAX_BAR_CATEGORIES = 30
+
 
 def validate_chart(spec: ChartSpec, profile: DatasetProfile) -> ChartSpec:
     columns = {c.name: c for c in profile.columns}
@@ -24,6 +26,15 @@ def validate_chart(spec: ChartSpec, profile: DatasetProfile) -> ChartSpec:
         raise ValueError(f"{spec.type} requires a numeric x column.")
     if spec.type == "scatter" and not numeric(spec.y):
         raise ValueError("Scatter requires a numeric y column.")
+    if spec.type == "bar":
+        column = columns[spec.x]
+        discrete = column.inferred_type in {"categorical", "boolean", "identifier"} or (
+            numeric(spec.x) and column.unique_count <= MAX_BAR_CATEGORIES
+        )
+        if not discrete:
+            raise ValueError(
+                f"bar requires a categorical x column or a numeric column with at most {MAX_BAR_CATEGORIES} distinct values; use histogram for continuous values or line for dates."
+            )
     if spec.type == "line" and columns[spec.x].inferred_type not in {"datetime", "numeric"}:
         raise ValueError("Line requires a datetime or numeric x column.")
     if spec.type in {"bar", "line"} and spec.y and not numeric(spec.y):

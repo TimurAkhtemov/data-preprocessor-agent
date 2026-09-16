@@ -119,10 +119,11 @@ Environment variables override the root `.env` file. Defaults work without `.env
 | `PROFILE_SAMPLE_ROWS` | `100000` | Maximum expensive-operation sample |
 | `OLLAMA_TIMEOUT_SECONDS` | `180` | Timeout per model call |
 | `WORKER_MEMORY_MB` | `2048` | Worker memory budget |
+| `OLLAMA_MAX_CONTEXT` | `65536` | Upper bound on the model context window (tokens) |
 
 If Ollama is unavailable or the configured model is missing, only investigation actions are disabled. Overview, Findings, Columns and charts keep working. A slow model can time out; choose a smaller model, narrow the question, or adjust the model timeout.
 
-Model calls allow up to 4,096 generated tokens, including any internal reasoning. Reasoning is not stored in the investigation trace or displayed; only structured actions and their short purposes are retained. The default does not force reasoning off: the installed Qwen model produced more reliable investigations when allowed to use its native reasoning behavior. Explicit overrides depend on the model's support and may affect latency and quality.
+Model calls allow up to 4,096 generated tokens, including any internal reasoning. The context window starts at 16,384 tokens and doubles as the conversation grows, up to `OLLAMA_MAX_CONTEXT`; each step up makes Ollama reload the model once, and a wide dataset with large tool results may need the larger window to keep the system prompt in context. Reasoning is not stored in the investigation trace or displayed; only structured actions and their short purposes are retained. The default does not force reasoning off: the installed Qwen model produced more reliable investigations when allowed to use its native reasoning behavior. Explicit overrides depend on the model's support and may affect latency and quality.
 
 ## Verification
 
@@ -147,7 +148,9 @@ make e2e
 E2E_CHANNEL=chrome make e2e
 ```
 
-The eight serial browser tests cover actual CSV/Parquet uploads, the demo profile, finding filters/Sheet keyboard dismissal, numeric/category charts, mobile column search, themes and malformed-file recovery. They replace the active UI session with the demo dataset; finish any investigation first. They do not call a model or touch your personal browser profile. Results go to `frontend/test-results/`.
+To keep the suite away from your working session, start a second stack on other ports (`--port 8765` for uvicorn, `DI_API_URL=http://127.0.0.1:8765` with `pnpm dev --port 5174`) and point the tests at it with `E2E_BASE_URL=http://127.0.0.1:5174`.
+
+The ten serial browser tests cover actual CSV/Parquet uploads, the demo profile, finding filters/Sheet keyboard dismissal, numeric/category charts, mobile column search, themes, malformed-file recovery, the question length gate and recovery from a backend restart during an investigation. They replace the active UI session with the demo dataset; finish any investigation first. They do not call a model or touch your personal browser profile. Results go to `frontend/test-results/`.
 
 ## Small live-model evaluation suite
 
@@ -165,7 +168,7 @@ The runner creates its own temporary FastAPI session, uses actual upload/profile
 
 Automated structural/numeric coverage checks are supplemented by a separate semantic review of claim-to-evidence correspondence. A passing small run demonstrates those cases; it is not a reliability benchmark. The failed baseline is preserved alongside the subsequent run in `evaluations/`. Observed failures, fixes and final case-by-case behavior are documented in [progress.md](progress.md).
 
-Verified on September 15, 2026: **119 automated tests**, **eight browser tests**, clean lint and a successful production build. The [final Qwen run](evaluations/qwen3.6-35b-2026-09-15-final.json) completed all four workflows with the required computed values and charts, two analytical actions per case, no rejected actions, and unchanged source/snapshot hashes. Model prose still needs review: correct calculations do not guarantee precise interpretation. The saved reviews retain those qualifications and earlier failures.
+Verified on September 15, 2026: **131 automated tests**, **ten browser tests**, clean lint and a successful production build. The [final Qwen run](evaluations/qwen3.6-35b-2026-09-15-final.json) completed all four workflows with the required computed values and charts, two analytical actions per case, no rejected actions, and unchanged source/snapshot hashes. Model prose still needs review: correct calculations do not guarantee precise interpretation. The saved reviews retain those qualifications and earlier failures.
 
 A [separate browser-submitted Qwen investigation](evaluations/browser-qwen3.6-35b-2026-09-15.json) verifies the actual form, live progress, final finding, chart, trace and Agent filter. Final presentation fixes were checked with live browser assertions and a fresh frontend lint/build; see `progress.md` for the precise verification sequence.
 

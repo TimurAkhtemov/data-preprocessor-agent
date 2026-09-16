@@ -1,3 +1,4 @@
+import json
 import logging
 
 import httpx
@@ -6,6 +7,8 @@ from ..config import Settings
 from .schemas import ACTION_SCHEMA
 
 log = logging.getLogger(__name__)
+NUM_PREDICT = 4096
+MIN_CONTEXT = 16384
 
 
 class OllamaError(RuntimeError):
@@ -48,15 +51,30 @@ class OllamaClient:
                 "message": "Could not connect to Ollama. Start Ollama and ensure the configured model is installed.",
             }
 
+    def context_window(self, messages: list[dict], schema: dict) -> int:
+        # Rough token estimate for JSON-heavy prompts, plus the generation budget.
+        # Ollama reloads the model when num_ctx changes, so grow in power-of-two steps.
+        characters = sum(len(str(m.get("content", ""))) for m in messages) + len(json.dumps(schema))
+        needed = characters // 3 + NUM_PREDICT + 1024
+        window = MIN_CONTEXT
+        while window < needed and window < self.settings.ollama_max_context:
+            window *= 2
+        return min(window, self.settings.ollama_max_context)
+
     async def chat(self, messages: list[dict], finish_only=False) -> str:
         from .schemas import Finish
 
+        schema = Finish.model_json_schema() if finish_only else ACTION_SCHEMA
         body = {
             "model": self.settings.ollama_model,
             "messages": messages,
             "stream": False,
-            "format": Finish.model_json_schema() if finish_only else ACTION_SCHEMA,
-            "options": {"temperature": 0.1, "num_predict": 4096, "num_ctx": 16384},
+            "format": schema,
+            "options": {
+                "temperature": 0.1,
+                "num_predict": NUM_PREDICT,
+                "num_ctx": self.context_window(messages, schema),
+            },
         }
         if self.settings.ollama_think is not None:
             body["think"] = self.settings.ollama_think

@@ -50,8 +50,9 @@ async def execute_python(code: str, snapshot: Path, settings: Settings) -> dict:
                 "snapshot": str(snapshot.resolve()),
                 "timeout": settings.agent_code_timeout_seconds,
                 "memory_mb": settings.worker_memory_mb,
-            }
-        ).encode()
+            },
+            ensure_ascii=False,
+        ).encode("utf-8")
         communication = asyncio.create_task(process.communicate(payload))
         start = time.monotonic()
         monitor = psutil.Process(process.pid)

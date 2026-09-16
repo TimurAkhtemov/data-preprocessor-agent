@@ -16,7 +16,8 @@ from dataset_investigator.execution.validator import SAFE_BUILTINS, validate_cod
 
 
 def main():
-    payload = json.loads(sys.stdin.read(20_000))
+    # Validated code is at most 8,000 characters; UTF-8 needs up to four bytes each.
+    payload = json.loads(sys.stdin.buffer.read(64_000).decode("utf-8"))
     timeout = max(1, math.ceil(payload["timeout"]))
     resource.setrlimit(resource.RLIMIT_CPU, (timeout, timeout + 1))
     resource.setrlimit(resource.RLIMIT_FSIZE, (0, 0))
@@ -80,8 +81,8 @@ def main():
     peak_bytes = peak_rss if sys.platform == "darwin" else peak_rss * 1024
     if peak_bytes > payload["memory_mb"] * 1024 * 1024:
         result = {"ok": False, "error": "Python execution exceeded the worker memory limit."}
-    sys.stdout.write(json.dumps(result, ensure_ascii=False))
-    sys.stdout.flush()
+    sys.stdout.buffer.write(json.dumps(result, ensure_ascii=False).encode("utf-8"))
+    sys.stdout.buffer.flush()
     # Avoid library atexit callbacks after the audit gate has closed.
     os._exit(0)
 

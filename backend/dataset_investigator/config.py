@@ -20,6 +20,7 @@ class Settings(BaseSettings):
     profile_sample_rows: int = Field(100_000, ge=1, le=100_000)
     ollama_timeout_seconds: float = Field(180, ge=1, le=600)
     worker_memory_mb: int = Field(2048, ge=256, le=8192)
+    ollama_max_context: int = Field(65536, ge=16384, le=262144)
 
     @field_validator("ollama_base_url")
     @classmethod

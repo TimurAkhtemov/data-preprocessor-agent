@@ -213,8 +213,8 @@ async def ingest(file: UploadFile, request: Request):
         session.loading = True
         session.phase = "Receiving upload"
     directory = session.root / str(uuid4())
-    directory.mkdir(mode=0o700)
     try:
+        directory.mkdir(mode=0o700)
         name = Path((file.filename or "dataset").replace("\\", "/")).name
         extension = Path(name).suffix.lower()
         if extension not in {".csv", ".parquet"}:

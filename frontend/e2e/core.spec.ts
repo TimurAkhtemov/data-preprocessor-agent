@@ -109,4 +109,60 @@ test.describe('Dataset Investigator core UI', () => {
     await expect(error).not.toContainText('Traceback')
     await expect(page.getByRole('heading', { name: 'suspicious_customers.csv' })).toBeVisible()
   })
+
+  test('requires at least three characters before an investigation can start', async ({ page }) => {
+    await page.route('**/api/ollama/status', (route) =>
+      route.fulfill({ json: { connected: true, model_available: true, model: 'mock', code: 'OK', message: 'Local model ready.' } }),
+    )
+    await page.goto('/')
+    await page.getByRole('tab', { name: /Investigator/ }).click()
+    const question = page.getByLabel('What would you like to understand?')
+    const run = page.getByRole('button', { name: 'Run investigation' })
+
+    await question.fill('hi')
+    await expect(run).toBeDisabled()
+    await question.fill('why')
+    await expect(run).toBeEnabled()
+  })
+
+  test('recovers when a running investigation disappears from the backend', async ({ page }) => {
+    // Simulates a backend restart mid-investigation: the start call succeeds, then
+    // every poll answers 404 because the in-memory session is gone.
+    await page.route('**/api/ollama/status', (route) =>
+      route.fulfill({ json: { connected: true, model_available: true, model: 'mock', code: 'OK', message: 'Local model ready.' } }),
+    )
+    await page.route('**/api/investigations', (route) =>
+      route.fulfill({
+        status: 202,
+        json: {
+          investigation_id: 'lost-after-restart',
+          question: 'Where do the duplicate rows come from?',
+          status: 'running',
+          max_steps: 5,
+          steps_remaining: 5,
+          current_activity: 'Preparing dataset context',
+          trace: [],
+          charts: [],
+          final_finding: null,
+          error: null,
+        },
+      }),
+    )
+    await page.route('**/api/investigations/lost-after-restart', (route) =>
+      route.fulfill({
+        status: 404,
+        json: { code: 'INVESTIGATION_NOT_FOUND', message: 'This investigation is not part of the current session.', details: null },
+      }),
+    )
+    await page.goto('/')
+    await page.getByRole('tab', { name: /Investigator/ }).click()
+    await page.getByLabel('What would you like to understand?').fill('Where do the duplicate rows come from?')
+    await page.getByRole('button', { name: 'Run investigation' }).click()
+
+    const alert = page.getByRole('alert')
+    await expect(alert).toContainText(/restarted/)
+    await expect(page.getByRole('button', { name: 'Run investigation' })).toBeEnabled()
+    await expect(page.getByText('Local backend is not responding')).toHaveCount(0)
+    await expect(page.getByRole('heading', { name: 'suspicious_customers.csv' })).toBeVisible()
+  })
 })

@@ -20,8 +20,8 @@ Your conclusions must be supported by successful tool results; quote measured nu
 accurately, and do not infer causation from associations. A truncated result is incomplete.
 Request a useful chart when it adds evidence. Allowed chart types: histogram, box,
 bar, scatter, line, missingness. Histogram/box use numeric x and optional categorical
-color, no y. Scatter uses numeric x/y. Bar uses categorical x; y is optional numeric
-mean (omit for counts). Line uses datetime/numeric x; y is optional numeric mean.
+color, no y. Scatter uses numeric x/y. Bar uses categorical x (or numeric with at most 30 distinct
+values); y is optional numeric mean (omit for counts). Line uses datetime/numeric x; y is optional numeric mean.
 Missingness uses no x/y/color. Never emit JavaScript, Plotly code, styling or HTML.
 Finish with title, severity (high/medium/low), summary, evidence (nonempty string list),
 recommended_action, confidence (0..1, self-assessed), related_columns (existing names).

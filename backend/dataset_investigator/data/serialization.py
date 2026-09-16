@@ -34,6 +34,8 @@ def safe_value(value, depth=0):
         return str(value)
     if isinstance(value, pd.Categorical):
         value = pd.Series(value)
+    if isinstance(value, pd.Index):
+        value = value.tolist()
     if isinstance(value, pd.Series):
         value = value.to_frame(name=str(value.name) if value.name is not None else "value")
     if isinstance(value, pd.DataFrame):
