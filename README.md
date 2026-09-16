@@ -11,6 +11,7 @@
   <img alt="React" src="https://img.shields.io/badge/React%2019-Vite%207-61DAFB?logo=react&logoColor=black">
   <img alt="Ollama" src="https://img.shields.io/badge/Ollama-local%20model-000000?logo=ollama&logoColor=white">
   <img alt="No cloud" src="https://img.shields.io/badge/data-never%20leaves%20your%20machine-0f766e">
+  <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-blue"></a>
 </p>
 
 <p align="center">
@@ -227,3 +228,12 @@ A [separate browser-submitted Qwen investigation](evaluations/browser-qwen3.6-35
 - `tests/`, `examples/`, `scripts/`: behavioral tests, synthetic fixture, local development tools
 
 The PRD remains the product specification. Cleaning, transformations, export, persistence, multiple datasets, cloud APIs and training are intentionally outside this MVP.
+
+## License
+
+This project is released under the [MIT License](LICENSE).
+
+The bundled evaluation datasets keep their own terms and are not covered by it: Iris and red wine
+quality are [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/), Palmer penguins is
+[CC0](https://creativecommons.org/publicdomain/zero/1.0/). Full attribution, sources and hashes are
+in [examples/evaluation/README.md](examples/evaluation/README.md).
