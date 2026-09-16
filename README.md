@@ -1,6 +1,50 @@
-# Dataset Investigator
+<h1 align="center">Dataset Investigator</h1>
+
+<p align="center">
+  <strong>Understand an unfamiliar CSV or Parquet file — on your own machine, with evidence you can check.</strong>
+</p>
+
+<p align="center">
+  <img alt="Tests" src="https://img.shields.io/badge/tests-131%20passing-1f9d63">
+  <img alt="Python" src="https://img.shields.io/badge/python-3.12-3776AB?logo=python&logoColor=white">
+  <img alt="FastAPI" src="https://img.shields.io/badge/FastAPI-0.115-009688?logo=fastapi&logoColor=white">
+  <img alt="React" src="https://img.shields.io/badge/React%2019-Vite%207-61DAFB?logo=react&logoColor=black">
+  <img alt="Ollama" src="https://img.shields.io/badge/Ollama-local%20model-000000?logo=ollama&logoColor=white">
+  <img alt="No cloud" src="https://img.shields.io/badge/data-never%20leaves%20your%20machine-0f766e">
+</p>
+
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/overview-dark.png">
+    <img src="docs/screenshots/overview-light.png" alt="Dataset overview: row and column counts, missingness by column, inferred column structure and twelve attention signals for suspicious_customers.csv">
+  </picture>
+</p>
 
 A local application for understanding unfamiliar CSV and Parquet datasets. A deterministic profiler surfaces missingness, repeated rows, unusual distributions, inconsistent labels and likely type mismatches. A bounded Ollama agent investigates these signals using Python, validated charts and evidence you can inspect. The source dataset is never cleaned or overwritten.
+
+## Ask a question, get a traceable answer
+
+Every screenshot below is a real run against the bundled demo dataset, captured by
+[`frontend/scripts/capture-screenshots.mjs`](frontend/scripts/capture-screenshots.mjs) against a
+live `qwen3.6:35b`. Regenerate them with a `make dev` stack running:
+
+```bash
+SHOT_CHANNEL=chrome node frontend/scripts/capture-screenshots.mjs
+```
+
+The agent gets at most five analytical steps. It writes restricted Python, requests a validated
+chart specification, and must ground its conclusion in results it actually computed:
+
+![An investigation into whether extreme ages cluster in one source system: a medium-severity finding with per-source counts, a recommendation and a box plot of age by source system](docs/screenshots/investigator.png)
+
+A finding is only as good as what produced it, so the whole trace stays open for inspection — the
+code that ran, and the values it returned:
+
+![The expanded investigation trace showing the pandas groupby the agent executed to compute extreme-age counts and rates per source system](docs/screenshots/trace.png)
+
+| Profiler and agent findings in one list | Per-column distributions and related signals |
+| --- | --- |
+| ![Findings tab listing twelve signals: eleven from the profiler plus one tagged agent finding, with severity filters](docs/screenshots/findings.png) | ![Columns tab showing the age column distribution with its summary statistics](docs/screenshots/columns.png) |
 
 ## Requirements
 
